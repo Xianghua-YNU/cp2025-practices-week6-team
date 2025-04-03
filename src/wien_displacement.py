@@ -24,19 +24,16 @@ def plot_wien_equation():
     - y = 5 - x 直线
     两条曲线的交点即为方程的解
     """
-    # TODO: 创建x轴数据点
-    x = None
-    
-    # TODO: 创建图形并设置大小
-    
-    # TODO: 绘制两条曲线
-    
-    # TODO: 设置坐标轴标签和标题
-    
-    # TODO: 添加图例和网格
-    
-    # TODO: 显示图形
-    pass
+    x = np.linspace(-1, 6, 100)
+    plt.figure(figsize=(8, 6))
+    plt.plot(x, 5 * np.exp(-x), 'r', label='y = 5 * exp(-x)')
+    plt.plot(x, 5 - x, label='y = 5 - x')
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.title('Graphical Solution of Wien Equation')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
 
 def wien_equation(x):
     """维恩方程：5e^(-x) + x - 5 = 0
@@ -47,8 +44,7 @@ def wien_equation(x):
     返回:
     float: 方程的函数值
     """
-    # TODO: 返回维恩方程的函数值
-    return None
+    return 5 * np.exp(-x) + x - 5
 
 def solve_wien_constant(x0):
     """求解维恩位移常数
@@ -64,11 +60,11 @@ def solve_wien_constant(x0):
         - x (float): 非线性方程的解
         - b (float): 维恩位移常数，单位：m·K
     """
-    # TODO: 使用fsolve求解非线性方程
-    x = None
+    # 求解非线性方程
+    x = float(fsolve(wien_equation, x0)[0])
     
-    # TODO: 计算维恩位移常数
-    b = None
+    # 计算维恩位移常数
+    b = constants.h * constants.c / (constants.k * x)
     
     return x, b
 
@@ -83,9 +79,12 @@ def calculate_temperature(wavelength, x0=5.0):
     
     返回:
     float: 黑体温度，单位：开尔文
+    
+    示例:
+    >>> temperature = calculate_temperature(502e-9)  # 计算太阳表面温度
     """
-    # TODO: 计算温度
-    return None
+    _, b = solve_wien_constant(x0)
+    return b / wavelength
 
 if __name__ == "__main__":
     # 绘制方程图像
@@ -106,5 +105,5 @@ if __name__ == "__main__":
     
     # 计算太阳表面温度
     wavelength_sun = 502e-9  # 502 nm 转换为米
-    temperature_sun = calculate_temperature(wavelength_sun, x0)
+    temperature_sun = calculate_temperature(wavelength_sun, x0)  # 使用相同的初始值
     print(f"\n太阳表面温度估计值：{temperature_sun:.0f} K")
